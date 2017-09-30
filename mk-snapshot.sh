@@ -44,5 +44,6 @@ EOF
 git add README.md
 git rm --cached mk-snapshot.sh
 git commit -m "Snapshot of libffi ${GHASH}"
+git checkout -f master
 
 echo "Created branch libffi-${SUFFIX}"
