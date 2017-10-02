@@ -18,20 +18,18 @@ REPO="${TMPD}/libffi"
 GHASH=$(git -C ${REPO} rev-parse --short HEAD)
 GDATE=$(git -C ${REPO} log -1 --pretty=format:%cd --date=format:%Y%m%d)
 SUFFIX="${GVERS}+git${GDATE}+${GHASH}"
-git -C ${REPO} archive --format=tar --prefix="libffi-${SUFFIX}/" HEAD | tar -C ${TMPD} -x
 
-# run and remove autogen, so we don't have to run it on the CI or elsewhere
-# and as such incure additional dependencies like libtool.
-(cd "${TMPD}/libffi-${SUFFIX}" && ./autogen.sh && rm autogen.sh)
+# run autogen and generate distribution tarball.
+(cd "$REPO" && ./autogen.sh && ./configure && make dist)
 
 # package it up
-LIB="libffi-${SUFFIX}.tar.gz"
-(cd "${TMPD}" && tar -czf "${LIB}" "libffi-${SUFFIX}")
-mv "$TMPD/$LIB" ./$LIB
+DISTLIB="libffi-${GVERS}.tar.gz"
+FINALLIB="libffi-${SUFFIX}.tar.gz"
+mv "$REPO/$DISTLIB" ./$FINALLIB
 
-# create orphan branch
+# create orphan libffi-tarballs branch
 git checkout --orphan "libffi-${SUFFIX}"
-git add $LIB
+git add $FINALLIB
 cat >README.md <<EOF
 # libffi snapshot tarball for GHC
 
