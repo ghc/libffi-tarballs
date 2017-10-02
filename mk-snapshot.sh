@@ -10,7 +10,7 @@ TMPD=$(mktemp -d)
 TDIR=$(pwd)
 
 # clone the repository (shallow is sufficient)
-git -C ${TMPD} clone --depth 1 https://github.com/libffi/libffi.git
+git -C ${TMPD} clone --depth 1 https://github.com/bgamari/libffi.git
 REPO="${TMPD}/libffi"
 
 # record the revision and create a copy of only the files
